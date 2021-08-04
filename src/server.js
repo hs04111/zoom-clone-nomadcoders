@@ -6,7 +6,7 @@ const app = express();
 
 app.set("view engine", "pug");
 app.set("views", `${__dirname}/views`);
-app.get("/public", express.static(`${__dirname}/public`));
+app.use("/public", express.static(`${__dirname}/public`));
 
 app.get("/", (req, res) => res.render("home"));
 app.get("/*", (req, res) => res.redirect("/"));
@@ -22,5 +22,17 @@ const server = http.createServer(app);
 // 현재의 경우, view 등을 함께 사용하기 위해 이렇게 세팅한다.
 // 이제 같은 port에서 ws와 http 프로토콜을 모두 사용할 수 있다.
 const wss = new WebSocket.Server({ server });
+
+// 웹소켓에서도 마치 addEventListener처럼 콜백 함수를 이벤트에 붙일 수 있다.
+wss.on("connection", (socket) => {
+  console.log("Connected to browser!");
+  socket.on("close", () => {
+    console.log("Disconnected from the browser");
+  });
+  socket.on("message", (message) => {
+    console.log(message.toString("utf8"));
+  });
+  socket.send("Hello!");
+});
 
 server.listen(3000, handleListen);

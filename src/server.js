@@ -24,13 +24,28 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 // 웹소켓에서도 마치 addEventListener처럼 콜백 함수를 이벤트에 붙일 수 있다.
+
+const sockets = [];
+
 wss.on("connection", (socket) => {
   console.log("Connected to browser!");
+  sockets.push(socket);
+  socket["nick"] = "Anonymous";
   socket.on("close", () => {
     console.log("Disconnected from the browser");
   });
   socket.on("message", (message) => {
-    console.log(message.toString("utf8"));
+    const parsedMessage = JSON.parse(message.toString("utf8"));
+    switch (parsedMessage.type) {
+      case "new_message":
+        sockets.forEach((aSocket) =>
+          aSocket.send(`${socket.nick}: ${parsedMessage.payload}`)
+        );
+        break;
+      case "nick":
+        socket["nick"] = parsedMessage.payload;
+        break;
+    }
   });
   socket.send("Hello!");
 });

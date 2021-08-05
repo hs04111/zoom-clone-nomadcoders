@@ -10,6 +10,13 @@ html(lang="en")
         header 
             h1 Hello!
         main
-            button Welcome!
+            h2 Welcome! 
+            ul 
+            form#nick
+                input(type="text" placeholder="Choose your nickname" required)
+                button Send
+            form#msg
+                input(type="text" placeholder="Write a message" required)
+                button Send
 
     script(src="/public/js/app.js") 

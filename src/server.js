@@ -15,8 +15,15 @@ const handleListen = () => {
   console.log("✔Server running on http://localhost:3000");
 };
 
-const server = http.createServer(app);
-const io = SocketIo(server);
+const httpServer = http.createServer(app);
+const wsServer = SocketIo(httpServer);
+
+wsServer.on("connection", (socket) => {
+  socket.on("enter_room", (msg, done) => {
+    console.log(msg);
+    done("We are Done!");
+  });
+});
 
 // const wss = new WebSocket.Server({ server });
 // const sockets = [];
@@ -43,4 +50,4 @@ const io = SocketIo(server);
 //   socket.send("Hello!");
 // });
 
-server.listen(3000, handleListen);
+httpServer.listen(3000, handleListen);

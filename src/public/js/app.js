@@ -44,11 +44,14 @@ const showRoom = () => {
 };
 
 const handleRoomSubmit = (event) => {
-  const input = enterForm.querySelector("input");
+  const roomNameInput = enterForm.querySelector("#roomName");
+  const nickNameInput = enterForm.querySelector("#name");
   event.preventDefault();
-  socket.emit("enter_room", input.value, showRoom);
-  roomName = input.value;
-  input.value = "";
+  socket.emit("enter_room", roomNameInput.value, nickNameInput.value, showRoom);
+  roomName = roomNameInput.value;
+  roomNameInput.value = "";
+  const changeNameInput = room.querySelector("#name input");
+  changeNameInput.value = nickNameInput.value;
 };
 
 enterForm.addEventListener("submit", handleRoomSubmit);

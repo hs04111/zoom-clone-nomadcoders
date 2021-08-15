@@ -17,7 +17,9 @@ const wsServer = SocketIo(httpServer);
 wsServer.on("connection", (socket) => {
   socket["nickname"] = "Anonymous";
   socket.onAny((event) => console.log(`Socket Event: ${event}`));
-  socket.on("enter_room", (roomName, done) => {
+
+  socket.on("enter_room", (roomName, nickname, done) => {
+    socket["nickname"] = nickname;
     socket.join(roomName);
     socket.to(roomName).emit("welcome", socket.nickname);
     done();

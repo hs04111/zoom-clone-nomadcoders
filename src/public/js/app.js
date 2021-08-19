@@ -56,12 +56,16 @@ const handleRoomSubmit = (event) => {
 
 enterForm.addEventListener("submit", handleRoomSubmit);
 
-socket.on("welcome", (user) => {
+socket.on("welcome", (user, count) => {
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName} (${count})`;
   addMessage(`${user} joined the room`);
 });
 
-socket.on("bye", (user) => {
+socket.on("bye", (user, count) => {
   addMessage(`${user} left!`);
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName} (${count})`;
 });
 
 socket.on("new_message", addMessage);
